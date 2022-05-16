@@ -1,0 +1,15 @@
+{
+    "name": "herwan/durainfwk1",
+    "autoload": {
+        "psr-4": {
+            "app\\": "./"
+        }
+    },
+    "authors": [
+        {
+            "name": "muhamadherwan",
+            "email": "hello.wanlab@gmail.com"
+        }
+    ],
+    "require": {}
+}
