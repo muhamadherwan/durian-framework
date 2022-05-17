@@ -35,7 +35,7 @@ class Router
     }
 
     /**
-     * @return void
+     *
      */
     public function resolve()
     {
@@ -44,12 +44,58 @@ class Router
 
         // set the page content based on the path.
         $callback = $this->routes[$method][$path] ?? false;
+
+        // if callback not exist return to not found page.
         if ($callback === false) {
-            echo "Not Found";
+            return "Not Found";
             exit;
         }
-        // else
-        echo call_user_func($callback);
 
+        // if callback is string, set the content using renderView()
+        if (is_string($callback)) {
+            return $this->renderView($callback);
+        }
+
+        // else
+        return call_user_func($callback);
     }
+
+    public function renderView($view)
+    {
+        // get the layoutContent
+        $layoutContent = $this->layoutContent();
+
+        // get the view content based on the requested string
+        $viewContent = $this->renderOnlyView($view);
+
+        // return the content and the layout content
+        return str_replace('{{content}}',$viewContent, $layoutContent);
+    }
+
+    protected function layoutContent()
+    {
+        ob_start();
+        include_once Application::$ROOT_DIR."/views/layout/main.php";
+        return ob_get_clean();
+    }
+
+    protected function renderOnlyView($view)
+    {
+        ob_start();
+        // get the view file based on the requested string
+        include_once Application::$ROOT_DIR."/views/$view.php";
+        return ob_get_clean();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 }
