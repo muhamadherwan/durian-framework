@@ -10,16 +10,19 @@ namespace app\core;
 class Router
 {
     public Request $request;
+    public Response $response;
     protected array $routes = [];
 
     /**
      * Router constructor.
      *
      * @param Request $request
+     * @param Response $response
      */
-    public function __construct(Request $request)
+    public function __construct(Request $request, Response $response)
     {
         $this->request = $request;
+        $this->response = $response;
     }
 
     /**
@@ -47,6 +50,7 @@ class Router
 
         // if callback not exist return to not found page.
         if ($callback === false) {
+            $this->response->setStatusCode(404);
             return "Not Found";
             exit;
         }
