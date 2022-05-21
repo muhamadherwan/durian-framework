@@ -5,14 +5,27 @@
  * 16/05/2022
  */
 
-// enable autoload
-require_once __DIR__ . '/../vendor/autoload.php';
-
 use app\controllers\AuthController;
 use app\controllers\SiteController;
 use app\core\Application;
 
-$app = new Application(dirname(__DIR__));
+// enable autoload
+require_once __DIR__ . '/../vendor/autoload.php';
+
+// load .env
+$dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__));
+$dotenv->load();
+
+// set the config data from .env file
+$config = [
+    'db' => [
+        'dsn' => $_ENV['DB_DSN'],
+        'user' => $_ENV['DB_USER'],
+        'password' => $_ENV['DB_PASSWORD']
+    ]
+];
+
+$app = new Application(dirname(__DIR__), $config);
 
 // get the route url and set the display page base on the route
 $app->router->get('/', [SiteController::class, 'home']);
