@@ -34,7 +34,7 @@ class Field
         <input type="%s" name="%s"  value="%s" class="form-control%s">
         <div class="invalid-feedback">%s</div>
         </div>
-        ', $this->attribute,
+        ', $this->model->labels()[$this->attribute] ?? $this->attribute,
            $this->type,
            $this->attribute,
            $this->model->{$this->attribute},

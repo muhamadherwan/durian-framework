@@ -49,4 +49,15 @@ class User extends DbModel
         return ['firstname', 'lastname', 'email', 'password', 'status'];
     }
 
+    // override label method in parent class and set the form label
+    public function labels(): array
+    {
+        return [
+            'firstname' => 'First name',
+            'lastname' => 'Last name',
+            'email' => 'Your Email',
+            'password' => 'Password',
+            'confirmPassword' => 'Confirm password'
+        ];
+    }
 }
