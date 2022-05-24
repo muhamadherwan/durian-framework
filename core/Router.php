@@ -2,6 +2,8 @@
 
 namespace app\core;
 
+use app\core\exception\NotFoundException;
+
 /**
  * Class Router
  * Return page content based on the requested url.
@@ -55,8 +57,8 @@ class Router
 
         // if callback not exist return to not found page.
         if ($callback === false) {
-            $this->response->setStatusCode(404);
-            return $this->renderView("_404");
+//            $this->response->setStatusCode($e->code);
+            throw new NotFoundException();
             exit;
         }
 
@@ -70,8 +72,15 @@ class Router
 
             // create instant of the controller using the callback first array item
             // and put back the instant inside the callback first array item
-            Application::$app->controller = new $callback[0]();
-            $callback[0] = Application::$app->controller;
+            /** @var \app\core\Controller $controller */
+            $controller = new $callback[0]();
+            Application::$app->controller = $controller;
+            $controller->action = $callback[1];
+            $callback[0] = $controller;
+
+            foreach ($controller->getMiddlewares() as $middleware) {
+                $middleware->execute();
+            }
 
         }
 
@@ -105,8 +114,13 @@ class Router
     // return the layout
     protected function layoutContent()
     {
-//        $layout = Application::$app->controller->layout;
-        $layout = Application::$app->controller->layout ?? 'main';
+        $layout = Application::$app->layout;
+
+        if (Application::$app->controller) {
+            $layout = Application::$app->controller->layout;
+        }
+
+//        $layout = Application::$app->controller->layout ?? 'main';
 
         ob_start();
         include_once Application::$ROOT_DIR."/views/layout/$layout.php";
