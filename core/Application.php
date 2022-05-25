@@ -2,6 +2,10 @@
 
 namespace app\core;
 
+use app\core\db\Database;
+use app\core\db\DbModel;
+use app\models\User;
+
 /**
  * Class Application
  * Return the page content based on the requested url.
@@ -17,9 +21,10 @@ class Application
     public ?Controller $controller = null;
     public Database $db;
     public Session $session;
-    public ?DbModel $user;
+    public ?UserModel $user;
     public string $userClass;
     public string $layout = 'main';
+    public View $view;
 
 
     public function __construct($rootPath, array $config)
@@ -33,6 +38,7 @@ class Application
         $this->router = new Router($this->request, $this->response);
         $this->db = new Database($config['db']);
         $this->session = new Session();
+        $this->view = new View();
 
 
         // get the user login session to use in every page
@@ -68,14 +74,14 @@ class Application
             echo $this->router->resolve();
         } catch (\Exception $e){
             $this->response->setStatusCode($e->getCode());
-            echo $this->router->renderView('_error', [
+            echo $this->view->renderView('_error', [
                 'exception' => $e,
             ]);
         }
 
     }
 
-    public function login(DbModel $user)
+    public function login(UserModel $user)
     {
         $this->user = $user;
         $primaryKey = $user->primaryKey();

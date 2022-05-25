@@ -1,10 +1,11 @@
 <?php
 
-namespace app\core;
-
-
+namespace app\core\db;
 
 // ORM active record
+use app\core\Application;
+use app\core\Model;
+
 abstract class DbModel extends Model
 {
     abstract public function tableName(): string;

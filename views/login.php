@@ -1,5 +1,8 @@
 <?php
 /** @var $model \app\models\User  */
+
+$this->title = 'Login';
+
 ?>
 
 <h1>Login</h1>
@@ -10,5 +13,3 @@
 <button type="submit" class="btn btn-primary">Submit</button>
 
 <?php echo \app\core\form\Form::end() ?>
-
-<?php
